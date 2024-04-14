@@ -4,7 +4,7 @@ Questions are sourced by reverse engineering AlgoExpert
 
 # Tasks Pending
 
-- [ ] Add code editor. Use Monaco Editor by Microsoft
+- [x] Add code editor. Use Monaco Editor by Microsoft
 - [ ] Create a backend to fetch the data
 - [ ] Language based solutions support
 - [ ] Online judge0 validation

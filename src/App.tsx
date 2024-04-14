@@ -12,9 +12,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
 import { Lightbulb } from "lucide-react";
-import ZeroSumSubarray from "@/questions/waterfall-streams.json";
+import ZeroSumSubarray from "@/data/questions/waterfall-streams.json";
+import { Editor } from "./Editor";
 
 const sampleInputRegex = /<h3>Sample Input<\/h3>\n<pre>(.*?)<\/pre>/s;
 const sampleOutputRegex = /<h3>Sample Output<\/h3>\n<pre>(.*?)<\/pre>/s;
@@ -28,13 +28,15 @@ export function ResizableDemo({
   sampleOutput,
   hints,
   solution,
+  startingCode,
 }: {
   title: string;
   question: string;
   sampleInput: string;
   sampleOutput: string;
   hints: string[];
-  solution: string;
+  solution?: string;
+  startingCode: string;
 }) {
   const [showSolution, setShowSolution] = React.useState(false);
 
@@ -92,26 +94,27 @@ export function ResizableDemo({
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={50}>
         <div className="flex-col h-full items-center justify-center p-6 overflow-auto">
-          <div className="flex items-center justify-start gap-6">
-            <div className="font-bold text-4xl">Solution - Javascript</div>
-            <Button
+          <div className="flex items-center justify-start gap-6 mb-8">
+            <div className="font-bold text-4xl">Your Solution</div>
+            {/* <Button
               size="sm"
               onClick={() => {
                 setShowSolution(!showSolution);
               }}
             >
               {showSolution ? "Hide Solution" : "Show Solution"}
-            </Button>
+            </Button> */}
           </div>
-          {showSolution && (
-            <pre className="mt-8">
-              <code
-                dangerouslySetInnerHTML={{
-                  __html: solution,
-                }}
-              ></code>
-            </pre>
-          )}
+          {
+            // <pre className="mt-8">
+            //   <code
+            //     dangerouslySetInnerHTML={{
+            //       __html: solution,
+            //     }}
+            //   ></code>
+            // </pre>
+            <Editor startingCode={startingCode} />
+          }
         </div>
       </ResizablePanel>
     </ResizablePanelGroup>
@@ -134,6 +137,7 @@ function App() {
         sampleOutput={sampleOutputMatch[0] ?? ""}
         hints={hints}
         solution={resources.javascript.solutions[0].replace(copyrightRegex, "")}
+        startingCode={resources.javascript.startingCode}
       />
     </div>
   );

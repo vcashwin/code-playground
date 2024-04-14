@@ -164,7 +164,8 @@ async function getSubmissionStatus(token: string) {
       console.log("Accepted");
       return true;
     } else if (response.data.status.id === 1 || response.data.status.id === 2) {
-      return false;
+      console.log("Pending");
+      return await getSubmissionStatus(token);
     } else {
       console.log(response.data.status.description);
       return false;

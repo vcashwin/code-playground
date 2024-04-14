@@ -16,7 +16,6 @@ import { Lightbulb } from "lucide-react";
 import ZeroSumSubarray from "@/data/questions/waterfall-streams.json";
 import { Editor } from "./Editor";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
 
 const sampleInputRegex = /<h3>Sample Input<\/h3>\n<pre>(.*?)<\/pre>/s;
@@ -47,9 +46,13 @@ export function ResizableDemo({
     const sourceCode = startingCode;
     const options = createSubmissionRequest(languageId, sourceCode);
     try {
-      const response = await axios.request(options);
-      console.log(response.data.token);
-      const result = await getSubmissionStatus(response.data.token);
+      const fetchedResponse = await fetch(
+        import.meta.env.VITE_RAPID_API_URL,
+        options
+      );
+      const response = await fetchedResponse.json();
+      console.log(response.token);
+      const result = await getSubmissionStatus(response.token);
       toast({
         title: result ? "Accepted" : "Failed",
         description: result
@@ -152,7 +155,11 @@ async function getSubmissionStatus(token: string) {
     },
   };
   try {
-    const response = await axios.request(options);
+    const fetchedResponse = await fetch(
+      `${import.meta.env.VITE_RAPID_API_URL}/${token}`,
+      options
+    );
+    const response = await fetchedResponse.json();
     if (response.data.status.id === 3) {
       console.log("Accepted");
       return true;
@@ -182,11 +189,11 @@ function createSubmissionRequest(languageId: number, sourceCode: string) {
       "X-RapidAPI-Key": import.meta.env.VITE_RAPID_API_KEY,
       "X-RapidAPI-Host": import.meta.env.VITE_RAPID_API_HOST,
     },
-    data: {
+    body: JSON.stringify({
       language_id: languageId,
       source_code: btoa(sourceCode),
       stdin: "",
-    },
+    }),
   };
   return options;
 }

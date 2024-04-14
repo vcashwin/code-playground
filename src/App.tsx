@@ -17,6 +17,7 @@ import ZeroSumSubarray from "@/data/questions/waterfall-streams.json";
 import { Editor } from "./Editor";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
+import { useToast } from "@/components/ui/use-toast";
 
 const sampleInputRegex = /<h3>Sample Input<\/h3>\n<pre>(.*?)<\/pre>/s;
 const sampleOutputRegex = /<h3>Sample Output<\/h3>\n<pre>(.*?)<\/pre>/s;
@@ -40,6 +41,7 @@ export function ResizableDemo({
   startingCode: string;
 }) {
   const [resizeEditor, setResizeEditor] = React.useState(false);
+  const { toast } = useToast();
   const handleSubmission = async () => {
     const languageId = 63; // JavaScript
     const sourceCode = startingCode;
@@ -47,7 +49,14 @@ export function ResizableDemo({
     try {
       const response = await axios.request(options);
       console.log(response.data.token);
-      getSubmissionStatus(response.data.token);
+      const result = await getSubmissionStatus(response.data.token);
+      toast({
+        title: result ? "Accepted" : "Failed",
+        description: result
+          ? "Your code has been accepted"
+          : "Your code has failed",
+        variant: result ? "success" : "destructive",
+      });
     } catch (error) {
       console.error(error);
     }
@@ -146,13 +155,16 @@ async function getSubmissionStatus(token: string) {
     const response = await axios.request(options);
     if (response.data.status.id === 3) {
       console.log("Accepted");
+      return true;
     } else if (response.data.status.id === 1 || response.data.status.id === 2) {
-      setTimeout(() => getSubmissionStatus(token), 1500);
+      return false;
     } else {
       console.log(response.data.status.description);
+      return false;
     }
   } catch (error) {
     console.error(error);
+    return false;
   }
 }
 

@@ -2,6 +2,9 @@
 
 Questions are sourced by reverse engineering AlgoExpert
 
+<img width="1672" alt="image" src="https://github.com/vcashwin/code-playground/assets/26198609/3f22e822-07d2-4be8-845c-db2cf108a18d">
+
+
 # Tasks Pending
 
 - [x] Add code editor. Use Monaco Editor by Microsoft

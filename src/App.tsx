@@ -13,10 +13,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Lightbulb } from "lucide-react";
-import ZeroSumSubarray from "@/data/questions/waterfall-streams.json";
 import { Editor } from "./Editor";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { QuestionSelector } from "@/components/QuestionSelector";
+import { getQuestionByUid } from "@/lib/questions";
 
 const sampleInputRegex = /<h3>Sample Input<\/h3>\n<pre>(.*?)<\/pre>/s;
 const sampleOutputRegex = /<h3>Sample Output<\/h3>\n<pre>(.*?)<\/pre>/s;
@@ -200,15 +201,46 @@ function createSubmissionRequest(languageId: number, sourceCode: string) {
 }
 
 function App() {
-  const { prompt, hints, name, resources } = ZeroSumSubarray;
+  const [selectedQuestionUid, setSelectedQuestionUid] = React.useState<string>("waterfall-streams");
+  
+  const currentQuestion = getQuestionByUid(selectedQuestionUid);
+  
+  if (!currentQuestion) {
+    return (
+      <div className="h-full w-full p-8 flex flex-col items-center justify-center gap-6">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-2">Code Playground</h1>
+          <p className="text-muted-foreground">Select a coding question to get started</p>
+        </div>
+        <QuestionSelector
+          selectedQuestionUid={selectedQuestionUid}
+          onQuestionSelect={setSelectedQuestionUid}
+        />
+      </div>
+    );
+  }
+
+  const { prompt, hints, name, resources } = currentQuestion;
   const sampleInputMatch = prompt.match(sampleInputRegex) ?? [];
   const sampleOutputMatch = prompt.match(sampleOutputRegex) ?? [];
   const promptWithoutSamples = prompt
     .replace(sampleInputRegex, "")
     .replace(sampleOutputRegex, "");
+
   return (
-    <div className="h-full w-full p-8">
+    <div className="h-full w-full p-4 md:p-8">
+      <div className="mb-4 md:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-xl md:text-2xl font-bold">Code Playground</h1>
+          <p className="text-sm text-muted-foreground">Practice coding problems</p>
+        </div>
+        <QuestionSelector
+          selectedQuestionUid={selectedQuestionUid}
+          onQuestionSelect={setSelectedQuestionUid}
+        />
+      </div>
       <ResizableDemo
+        key={selectedQuestionUid}
         title={name}
         question={promptWithoutSamples}
         sampleInput={sampleInputMatch[0] ?? ""}

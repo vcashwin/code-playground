@@ -29,6 +29,6 @@
     // Explicitly include React type declarations so non-JSX .ts files that import React still get typings.
     "types": ["react", "react-dom"]
   },
-  "include": ["src"],
+  "include": ["src", "src/types"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

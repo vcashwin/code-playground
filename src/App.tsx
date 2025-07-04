@@ -16,6 +16,7 @@ import { Lightbulb } from "lucide-react";
 import { Editor } from "./Editor";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { QuestionSelector } from "@/components/QuestionSelector";
 import { getQuestionByUid } from "@/lib/questions";
 
@@ -42,6 +43,7 @@ export function ResizableDemo({
 }) {
   const [resizeEditor, setResizeEditor] = React.useState(false);
   const { toast } = useToast();
+  const isSmallScreen = useMediaQuery("(max-width: 768px)");
   const handleSubmission = async () => {
     const languageId = 63; // JavaScript
     const sourceCode = startingCode;
@@ -67,14 +69,14 @@ export function ResizableDemo({
   };
   return (
     <ResizablePanelGroup
-      direction="horizontal"
+      direction={isSmallScreen ? "vertical" : "horizontal"}
       className="h-full max-w-full rounded-lg border"
       onLayout={(sizes) => {
         console.log("Layout Changed", sizes);
         setResizeEditor(true);
       }}
     >
-      <ResizablePanel defaultSize={50}>
+      <ResizablePanel defaultSize={isSmallScreen ? 60 : 50}>
         <div className="flex-col h-full items-center justify-center p-6 overflow-auto">
           <div className="font-bold text-4xl">{title}</div>
           <div
@@ -121,7 +123,7 @@ export function ResizableDemo({
         </div>
       </ResizablePanel>
       <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={50}>
+      <ResizablePanel defaultSize={isSmallScreen ? 40 : 50}>
         <div className="grid grid-rows-10 h-full p-6 overflow-auto">
           <div className="flex items-center justify-start gap-6 mb-8">
             <div className="font-bold text-4xl">Your Solution</div>

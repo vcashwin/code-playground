@@ -24,7 +24,10 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+
+    // Explicitly include React type declarations so non-JSX .ts files that import React still get typings.
+    "types": ["react", "react-dom"]
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

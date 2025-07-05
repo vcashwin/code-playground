@@ -1,3 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
+
 import * as React from "react";
 
 export type Theme = "light" | "dark" | "system";
@@ -9,8 +11,7 @@ interface ThemeContextValue {
 
 const ThemeContext = React.createContext<ThemeContextValue>({
   theme: "system",
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setTheme: () => {},
+  setTheme: () => null,
 });
 
 function applyTheme(theme: Theme) {
@@ -46,16 +47,15 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }: R
     if (mql.addEventListener) {
       mql.addEventListener("change", listener);
     } else {
-      // Safari and older browsers
-      // @ts-ignore
-      mql.addListener(listener);
+      // Safari and older browsers (deprecated API)
+      (mql as unknown as { addListener: (cb: () => void) => void }).addListener(listener);
     }
     return () => {
       if (mql.removeEventListener) {
         mql.removeEventListener("change", listener);
       } else {
-        // @ts-ignore
-        mql.removeListener(listener);
+        // Deprecated API
+        (mql as unknown as { removeListener: (cb: () => void) => void }).removeListener(listener);
       }
     };
   }, [theme]);

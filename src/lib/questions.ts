@@ -16,7 +16,7 @@ interface Question {
 // Import all question files dynamically
 const questionModules = import.meta.glob('../data/questions/*.json', { eager: true });
 
-export const questions: Question[] = Object.values(questionModules).map((module: any) => module.default);
+export const questions: Question[] = Object.values(questionModules).map((module) => (module as { default: Question }).default);
 
 export const getQuestionByUid = (uid: string): Question | undefined => {
   return questions.find(question => question.uid === uid);

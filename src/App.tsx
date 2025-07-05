@@ -17,6 +17,7 @@ import { Editor } from "./Editor";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { QuestionSelector } from "@/components/QuestionSelector";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { getQuestionByUid } from "@/lib/questions";
 
 const sampleInputRegex = /<h3>Sample Input<\/h3>\n<pre>(.*?)<\/pre>/s;
@@ -234,10 +235,13 @@ function App() {
           <h1 className="text-xl md:text-2xl font-bold">Code Playground</h1>
           <p className="text-sm text-muted-foreground">Practice coding problems</p>
         </div>
-        <QuestionSelector
-          selectedQuestionUid={selectedQuestionUid}
-          onQuestionSelect={setSelectedQuestionUid}
-        />
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
+          <QuestionSelector
+            selectedQuestionUid={selectedQuestionUid}
+            onQuestionSelect={setSelectedQuestionUid}
+          />
+        </div>
       </div>
       <ResizableDemo
         key={selectedQuestionUid}
